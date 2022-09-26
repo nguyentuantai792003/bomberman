@@ -23,9 +23,7 @@ public class GameScreen implements Screen, InputProcessor {
     int playerPosY;
     OrthographicCamera camera;
     Rectangle player;
-    //    Rectangle [] brick;
-//    Rectangle [] wall;
-//    Rectangle [] monster;
+
     Texture playerImg;
     Texture brickImg;
     Texture wallImg;
@@ -39,8 +37,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     private Array<Explosion> exs;
     Texture backgroundImg;
-
-    float time = 0;
 
     public GameScreen(MyGame game) {
         this.game = game;
@@ -71,7 +67,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         Gdx.input.setInputProcessor(this);
         bombs = new Array<>();
-        exs=new Array<>();
+        exs = new Array<>();
     }
 
     @Override
@@ -92,21 +88,17 @@ public class GameScreen implements Screen, InputProcessor {
         // coordinate system specified by the camera.
         game.batch.setProjectionMatrix(camera.combined);
 
-        // begin a new batch and draw the bucket and
-        // all drops
         game.batch.begin();
         game.batch.draw(backgroundImg, 0, 0, 800, 800);
         for (Bomb bomb : bombs) {
             game.batch.draw(bombImg, bomb.rectangle.x, bomb.rectangle.y, gridSize, gridSize);
         }
-        for (Explosion ex: exs){
-            if(ex.time>3){
+        for (Explosion ex : exs) {
+            if (ex.time > 3) {
                 game.batch.draw(explosionImg, ex.rectangle.x, ex.rectangle.y, gridSize, gridSize);
             }
         }
         game.batch.draw(playerImg, player.x, player.y, gridSize, gridSize);
-
-//        game.batch.draw(bombImg, bomb.x, bomb.y, gridSize, gridSize);
         game.batch.end();
 
         for (Iterator<Bomb> iter = bombs.iterator(); iter.hasNext(); ) {
@@ -131,10 +123,10 @@ public class GameScreen implements Screen, InputProcessor {
         Bomb bomb = new Bomb(bom, 0);
         bombs.add(bomb);
         exs.add(new Explosion(new Rectangle(player.x, player.y, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x+gridSize, player.y, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x-gridSize, player.y, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x, player.y+gridSize, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x, player.y-gridSize, gridSize, gridSize)));
+        exs.add(new Explosion(new Rectangle(player.x + gridSize, player.y, gridSize, gridSize)));
+        exs.add(new Explosion(new Rectangle(player.x - gridSize, player.y, gridSize, gridSize)));
+        exs.add(new Explosion(new Rectangle(player.x, player.y + gridSize, gridSize, gridSize)));
+        exs.add(new Explosion(new Rectangle(player.x, player.y - gridSize, gridSize, gridSize)));
     }
 
     @Override
