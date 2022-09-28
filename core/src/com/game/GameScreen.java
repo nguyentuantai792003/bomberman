@@ -9,20 +9,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.Timer;
-import org.w3c.dom.css.Rect;
 
 import java.util.Iterator;
 
 public class GameScreen implements Screen, InputProcessor {
 
     final MyGame game;
-    final int gridSize = 40;
+    public final int gridSize = 40;
     int[][] map;
-    int playerPosX;
-    int playerPosY;
+    public int playerPosX;
+    public int playerPosY;
     OrthographicCamera camera;
-    Rectangle player;
+    public Rectangle player;
 
     Texture playerImg;
     Texture brickImg;
@@ -127,6 +125,7 @@ public class GameScreen implements Screen, InputProcessor {
         exs.add(new Explosion(new Rectangle(player.x - gridSize, player.y, gridSize, gridSize)));
         exs.add(new Explosion(new Rectangle(player.x, player.y + gridSize, gridSize, gridSize)));
         exs.add(new Explosion(new Rectangle(player.x, player.y - gridSize, gridSize, gridSize)));
+
     }
 
     @Override
@@ -157,36 +156,20 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.RIGHT) {
-            if (player.x != 760) {
-                player.x += gridSize;
-                playerPosX++;
-                System.out.println("RIGHT");
-            }
+            event.moveRight(player);
         }
         if (keycode == Input.Keys.LEFT) {
-            if (player.x != 0) {
-                player.x -= gridSize;
-                playerPosX--;
-                System.out.println("LEFT");
-            }
+            event.moveLeft(player);
         }
         if (keycode == Input.Keys.UP) {
-            if (player.y != 760) {
-                player.y += gridSize;
-                playerPosY++;
-                System.out.println("UP");
-            }
+            event.moveUp(player);
+
         }
         if (keycode == Input.Keys.DOWN) {
-            if (player.y != 0) {
-                player.y -= gridSize;
-                playerPosY--;
-                System.out.println("DOWN");
-            }
+            event.moveDown(player);
         }
         if (keycode == Input.Keys.A) {
-            spawnBomb();
-            System.out.println("A");
+            event.spawnBomb(player,bombs,exs);
         }
         return true;
     }
