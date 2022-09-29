@@ -156,7 +156,6 @@ public class GameScreen implements Screen, InputProcessor {
             monstest.direction = -1 * monstest.direction;
             monstest.rectangle.x += monstest.direction * 40;
         }
-
     }
 
     @Override

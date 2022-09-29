@@ -6,6 +6,13 @@ import com.badlogic.gdx.utils.Array;
 public class event {
     static int gridSize = 40;
 
+    static int posX(Rectangle a){
+        return 19 - (int)a.y / gridSize;
+    }
+
+    static int posY(Rectangle a){
+        return (int)a.x/gridSize;
+    }
     public static void moveRight(Rectangle player, int map[][]) {
         if (player.x != 760 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize + 1] == 0) {
             player.x += gridSize;
@@ -44,4 +51,6 @@ public class event {
         exs.add(new Explosion(new Rectangle(player.x, player.y + gridSize, gridSize, gridSize)));
         exs.add(new Explosion(new Rectangle(player.x, player.y - gridSize, gridSize, gridSize)));
     }
+
+
 }
