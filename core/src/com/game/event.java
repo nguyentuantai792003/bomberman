@@ -6,29 +6,29 @@ import com.badlogic.gdx.utils.Array;
 public class event {
     static int gridSize = 40;
 
-    public static void moveRight(Rectangle player) {
-        if (player.x != 760) {
+    public static void moveRight(Rectangle player, int map[][]) {
+        if (player.x != 760 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize + 1] == 0) {
             player.x += gridSize;
             System.out.println("RIGHT");
         }
     }
 
-    public static void moveLeft(Rectangle player) {
-        if (player.x != 0) {
+    public static void moveLeft(Rectangle player, int map[][]) {
+        if (player.x != 0 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize - 1] == 0) {
             player.x -= gridSize;
             System.out.println("LEFT");
         }
     }
 
-    public static void moveUp(Rectangle player) {
-        if (player.y != 760) {
+    public static void moveUp(Rectangle player, int map[][]) {
+        if (player.y != 760 && map[19 - (int) player.y / gridSize - 1][(int) player.x / gridSize] == 0) {
             player.y += gridSize;
             System.out.println("UP");
         }
     }
 
-    public static void moveDown(Rectangle player) {
-        if (player.y != 0) {
+    public static void moveDown(Rectangle player,int map[][]) {
+        if (player.y != 0 && map[19 - (int) player.y / gridSize + 1][(int) player.x / gridSize] == 0) {
             player.y -= gridSize;
             System.out.println("DOWN");
         }

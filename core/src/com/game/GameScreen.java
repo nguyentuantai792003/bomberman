@@ -16,35 +16,52 @@ public class GameScreen implements Screen, InputProcessor {
 
     final MyGame game;
     public final int gridSize = 40;
-    int[][] map;
+    //    int[][] map;
     public int playerPosX;
     public int playerPosY;
     OrthographicCamera camera;
     public Rectangle player;
-
     Texture playerImg;
     Texture brickImg;
     Texture wallImg;
     Texture monsterImg;
     Texture explosionImg;
     Texture bombImg;
-
-    private Rectangle bomb;
-
     private Array<Bomb> bombs;
-
     private Array<Explosion> exs;
+    Monster monstest;
     Texture backgroundImg;
+
+    public final int EMPTY = 0;
+    public final int WALL = 1;
+    public final int BRICK = 2;
+    public final int MONSTER = 3;
+
+    int map[][] = {
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+    };
 
     public GameScreen(MyGame game) {
         this.game = game;
-
-        map = new int[20][20];
-        for (int i = 0; i < 20; i++) {
-            for (int j = 0; j < 20; j++) {
-                map[i][j] = 0;
-            }
-        }
 
         playerPosX = 0;
         playerPosY = 0;
@@ -60,12 +77,14 @@ public class GameScreen implements Screen, InputProcessor {
         wallImg = new Texture(Gdx.files.internal("wall.jpg"));
         backgroundImg = new Texture(Gdx.files.internal("map.jpg"));
 
-        player = new Rectangle(0, 0, gridSize, gridSize);
+        player = new Rectangle(80, 80, gridSize, gridSize);
 
 
         Gdx.input.setInputProcessor(this);
         bombs = new Array<>();
         exs = new Array<>();
+
+        monstest = new Monster(new Rectangle(80, 80, 40, 40), 1);
     }
 
     @Override
@@ -76,7 +95,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-
         ScreenUtils.clear(0, 0, 0.2f, 1);
 
         // tell the camera to update its matrices.
@@ -96,7 +114,19 @@ public class GameScreen implements Screen, InputProcessor {
                 game.batch.draw(explosionImg, ex.rectangle.x, ex.rectangle.y, gridSize, gridSize);
             }
         }
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                if (map[i][j] == WALL) {
+                    game.batch.draw(wallImg, j * gridSize, (19 - i) * gridSize, gridSize, gridSize);
+//                    game.batch.draw(wallImg, i * gridSize, j * gridSize, gridSize, gridSize);
+                }
+                if (map[j][i] == BRICK) {
+                    game.batch.draw(brickImg, (19 - i) * gridSize, (19 - j) * gridSize, gridSize, gridSize);
+                }
+            }
+        }
         game.batch.draw(playerImg, player.x, player.y, gridSize, gridSize);
+        game.batch.draw(monsterImg, monstest.rectangle.x, monstest.rectangle.y, gridSize, gridSize);
         game.batch.end();
 
         for (Iterator<Bomb> iter = bombs.iterator(); iter.hasNext(); ) {
@@ -113,18 +143,19 @@ public class GameScreen implements Screen, InputProcessor {
                 iter.remove();
             }
         }
-    }
+        monstest.time += Gdx.graphics.getDeltaTime();
+        if (monstest.time > 0.2) {
+            monstest.rectangle.x += monstest.direction * 40;
+            monstest.time = 0;
+        }
 
 
-    private void spawnBomb() {
-        Rectangle bom = new Rectangle(player.x, player.y, gridSize, gridSize);
-        Bomb bomb = new Bomb(bom, 0);
-        bombs.add(bomb);
-        exs.add(new Explosion(new Rectangle(player.x, player.y, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x + gridSize, player.y, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x - gridSize, player.y, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x, player.y + gridSize, gridSize, gridSize)));
-        exs.add(new Explosion(new Rectangle(player.x, player.y - gridSize, gridSize, gridSize)));
+        if (map[19 - (int) (monstest.rectangle.y / gridSize)][(int) monstest.rectangle.x / gridSize] != 0) {
+//        if(monstest.rectangle.x == 800 - gridSize || monstest.rectangle.x==0){
+            System.out.println(monstest.rectangle.x/gridSize);
+            monstest.direction = -1 * monstest.direction;
+            monstest.rectangle.x += monstest.direction * 40;
+        }
 
     }
 
@@ -156,20 +187,20 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.RIGHT) {
-            event.moveRight(player);
+            event.moveRight(player,map);
         }
         if (keycode == Input.Keys.LEFT) {
-            event.moveLeft(player);
+            event.moveLeft(player,map);
         }
         if (keycode == Input.Keys.UP) {
-            event.moveUp(player);
+            event.moveUp(player,map);
 
         }
         if (keycode == Input.Keys.DOWN) {
-            event.moveDown(player);
+            event.moveDown(player,map);
         }
         if (keycode == Input.Keys.A) {
-            event.spawnBomb(player,bombs,exs);
+            event.spawnBomb(player, bombs, exs);
         }
         return true;
     }
