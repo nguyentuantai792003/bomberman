@@ -29,6 +29,7 @@ public class GameScreen implements Screen, InputProcessor {
     Texture bombImg;
     private Array<Bomb> bombs;
     private Array<Explosion> exs;
+    private Array<Monster> monsters;
     Monster monstest;
     Texture backgroundImg;
 
@@ -46,7 +47,7 @@ public class GameScreen implements Screen, InputProcessor {
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
@@ -88,6 +89,7 @@ public class GameScreen implements Screen, InputProcessor {
         exs = new Array<>();
 
         monstest = new Monster(new Rectangle(80, 80, 40, 40), 1);
+
     }
 
     public boolean PlayerCollision(){
@@ -102,6 +104,14 @@ public class GameScreen implements Screen, InputProcessor {
         return false;
     }
 
+    public boolean MonsterCollision(){
+        for (Explosion ex : exs) {
+            if (monstest.rectangle.x == ex.rectangle.x && monstest.rectangle.y == ex.rectangle.y && ex.time > 3) {
+                return true;
+            }
+        }
+        return false;
+    }
     @Override
     public void show() {
 
@@ -168,6 +178,12 @@ public class GameScreen implements Screen, InputProcessor {
             game.setScreen(new EndGameScreen(game));
             dispose();
         }
+
+        /* Monster and bomb collision bug */
+//        if (MonsterCollision() == true){
+//            monstest.rectangle = null;
+//            monstest = null;
+//        }
 
         if (map[19 - (int) (monstest.rectangle.y / gridSize)][(int) monstest.rectangle.x / gridSize] != 0) {
 //        if(monstest.rectangle.x == 800 - gridSize || monstest.rectangle.x==0){
