@@ -41,7 +41,7 @@ public class GameScreen implements Screen, InputProcessor {
     public int count = 0;
 
 
-    int map[][] = {
+    int[][] map = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -87,15 +87,19 @@ public class GameScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
         bombs = new Array<>();
         exs = new Array<>();
-
+        monsters = new Array<>();
         monstest = new Monster(new Rectangle(80, 80, 40, 40), 1);
+        Monster monstest1 = new Monster(new Rectangle(160, 160, 40, 40), 1);
+        monsters.add(monstest);
+        monsters.add(monstest1);
 
     }
 
-    public boolean PlayerCollision(){
-        if (player.x == monstest.rectangle.x && player.y == monstest.rectangle.y){
+    public boolean PlayerCollision(Monster mon) {
+        if (player.x == mon.rectangle.x && player.y == mon.rectangle.y) {
             return true;
         }
+
         for (Explosion ex : exs) {
             if (player.x == ex.rectangle.x && player.y == ex.rectangle.y && ex.time > 3) {
                 return true;
@@ -104,7 +108,7 @@ public class GameScreen implements Screen, InputProcessor {
         return false;
     }
 
-    public boolean MonsterCollision(){
+    public boolean MonsterCollision(Monster monstest) {
         for (Explosion ex : exs) {
             if (monstest.rectangle.x == ex.rectangle.x && monstest.rectangle.y == ex.rectangle.y && ex.time > 3) {
                 return true;
@@ -112,11 +116,11 @@ public class GameScreen implements Screen, InputProcessor {
         }
         return false;
     }
+
     @Override
     public void show() {
 
     }
-
 
     @Override
     public void render(float delta) {
@@ -151,7 +155,9 @@ public class GameScreen implements Screen, InputProcessor {
             }
         }
         game.batch.draw(playerImg, player.x, player.y, gridSize, gridSize);
-        game.batch.draw(monsterImg, monstest.rectangle.x, monstest.rectangle.y, gridSize, gridSize);
+        for (Monster mon : monsters) {
+            game.batch.draw(monsterImg, mon.rectangle.x, mon.rectangle.y, mon.rectangle.width, mon.rectangle.height);
+        }
         game.batch.end();
 
         for (Iterator<Bomb> iter = bombs.iterator(); iter.hasNext(); ) {
@@ -168,29 +174,29 @@ public class GameScreen implements Screen, InputProcessor {
                 iter.remove();
             }
         }
-        monstest.time += Gdx.graphics.getDeltaTime();
-        if (monstest.time > 0.2) {
-            monstest.rectangle.x += monstest.direction * 40;
-            monstest.time = 0;
+
+
+        for (Iterator<Monster> iter = monsters.iterator(); iter.hasNext(); ) {
+            Monster monstest = iter.next();
+            if ((map[19 - (int) (monstest.rectangle.y / gridSize)][(int) monstest.rectangle.x / gridSize] != 0)) {
+                monstest.direction = -1 * monstest.direction;
+                monstest.rectangle.x += monstest.direction * 40;
+            }
+
+            monstest.time += Gdx.graphics.getDeltaTime();
+            if (monstest.time > 0.2) {
+                monstest.rectangle.x += monstest.direction * 40;
+                monstest.time = 0;
+            }
+            if (PlayerCollision(monstest)) {
+                game.setScreen(new EndGameScreen(game));
+                dispose();
+            }
+            if (MonsterCollision(monstest)) {
+                iter.remove();
+            }
         }
 
-        if (PlayerCollision() == true){
-            game.setScreen(new EndGameScreen(game));
-            dispose();
-        }
-
-        /* Monster and bomb collision bug */
-//        if (MonsterCollision() == true){
-//            monstest.rectangle = null;
-//            monstest = null;
-//        }
-
-        if (map[19 - (int) (monstest.rectangle.y / gridSize)][(int) monstest.rectangle.x / gridSize] != 0) {
-//        if(monstest.rectangle.x == 800 - gridSize || monstest.rectangle.x==0){
-//            System.out.println(monstest.rectangle.x/gridSize);
-            monstest.direction = -1 * monstest.direction;
-            monstest.rectangle.x += monstest.direction * 40;
-        }
     }
 
     @Override
@@ -221,20 +227,20 @@ public class GameScreen implements Screen, InputProcessor {
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.RIGHT) {
-            event.moveRight(player,map);
+            event.moveRight(player, map);
         }
         if (keycode == Input.Keys.LEFT) {
-            event.moveLeft(player,map);
+            event.moveLeft(player, map);
         }
         if (keycode == Input.Keys.UP) {
-            event.moveUp(player,map);
+            event.moveUp(player, map);
 
         }
         if (keycode == Input.Keys.DOWN) {
-            event.moveDown(player,map);
+            event.moveDown(player, map);
         }
         if (keycode == Input.Keys.A) {
-            event.spawnBomb(player, bombs, exs);
+            event.spawnBomb(player, bombs, exs,map);
         }
         return true;
     }
