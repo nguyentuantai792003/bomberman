@@ -4,6 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class event {
     static int gridSize = 40;
 
@@ -43,8 +47,8 @@ public class event {
         }
     }
 
-    public static void spawnBomb(Rectangle player, Array<Bomb> bombs, Array<Explosion> exs, int map[][]) {
-        Rectangle bom = new Rectangle(player.x, player.y, gridSize, gridSize);
+    public static void spawnBomb(Rectangle player, Array<Bomb> bombs, Array<Explosion> exs, final int map[][]) {
+        final Rectangle bom = new Rectangle(player.x, player.y, gridSize, gridSize);
         Bomb bomb = new Bomb(bom, 0);
         bombs.add(bomb);
         exs.add(new Explosion(new Rectangle(player.x, player.y, gridSize, gridSize)));
@@ -52,25 +56,30 @@ public class event {
         exs.add(new Explosion(new Rectangle(player.x - gridSize, player.y, gridSize, gridSize)));
         exs.add(new Explosion(new Rectangle(player.x, player.y + gridSize, gridSize, gridSize)));
         exs.add(new Explosion(new Rectangle(player.x, player.y - gridSize, gridSize, gridSize)));
-        bomb.time += Gdx.graphics.getDeltaTime();
-        if (bomb.time > 3) {
-            if (map[posX(bom)][posY(bom)] == 2) {
-                map[posX(bom)][posY(bom)] = 0;
-            }
-            if (map[posX(bom) - 1][posY(bom)] == 2) {
-                map[posX(bom) - 1][posY(bom)] = 0;
-            }
-            if (map[posX(bom) + 1][posY(bom)] == 2) {
-                map[posX(bom) + 1][posY(bom)] = 0;
-            }
-            if (map[posX(bom)][posY(bom) - 1] == 2) {
-                map[posX(bom)][posY(bom) - 1] = 0;
-            }
-            if (map[posX(bom)][posY(bom) + 1] == 2) {
-                map[posX(bom)][posY(bom) + 1] = 0;
-            }
-        }
 
+        Timer timer = new Timer(3000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                // Code to be executed
+                if (map[posX(bom)][posY(bom)] == 2) {
+                    map[posX(bom)][posY(bom)] = 0;
+                }
+                if (map[posX(bom) - 1][posY(bom)] == 2) {
+                    map[posX(bom) - 1][posY(bom)] = 0;
+                }
+                if (map[posX(bom) + 1][posY(bom)] == 2) {
+                    map[posX(bom) + 1][posY(bom)] = 0;
+                }
+                if (map[posX(bom)][posY(bom) - 1] == 2) {
+                    map[posX(bom)][posY(bom) - 1] = 0;
+                }
+                if (map[posX(bom)][posY(bom) + 1] == 2) {
+                    map[posX(bom)][posY(bom) + 1] = 0;
+                }
+            }
+        });
+        timer.setRepeats(false); // Only execute once
+        timer.start(); // Go go go!
     }
 
 
