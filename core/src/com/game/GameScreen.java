@@ -12,6 +12,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.util.Iterator;
 
+import static com.game.event.posX;
+import static com.game.event.posY;
+
 public class GameScreen implements Screen, InputProcessor {
 
     final MyGame game;
@@ -19,7 +22,7 @@ public class GameScreen implements Screen, InputProcessor {
     //    int[][] map;
     public int playerPosX;
     public int playerPosY;
-    OrthographicCamera camera;
+    public static final OrthographicCamera camera = new OrthographicCamera();
     public Rectangle player;
     Texture playerImg;
     Texture brickImg;
@@ -28,7 +31,7 @@ public class GameScreen implements Screen, InputProcessor {
     Texture explosionImg;
     Texture bombImg;
     private Array<Bomb> bombs;
-    private Array<Explosion> exs;
+    private final Array<Explosion> exs;
     private Array<Monster> monsters;
     Monster monstest;
     Texture backgroundImg;
@@ -37,6 +40,7 @@ public class GameScreen implements Screen, InputProcessor {
     public final int WALL = 1;
     public final int BRICK = 2;
     public final int MONSTER = 3;
+    public final int EXPLOSION = 4;
 
     public int count = 0;
 
@@ -70,8 +74,8 @@ public class GameScreen implements Screen, InputProcessor {
         playerPosX = 0;
         playerPosY = 0;
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 800);
+//        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 600, 600);
 
         playerImg = new Texture(Gdx.files.internal("player.png"));
         brickImg = new Texture(Gdx.files.internal("brick.png"));
@@ -81,7 +85,7 @@ public class GameScreen implements Screen, InputProcessor {
         wallImg = new Texture(Gdx.files.internal("wall.jpg"));
         backgroundImg = new Texture(Gdx.files.internal("map.jpg"));
 
-        player = new Rectangle(120, 120, gridSize, gridSize);
+        player = new Rectangle(280, 280, gridSize, gridSize);
 
 
         Gdx.input.setInputProcessor(this);
@@ -121,6 +125,7 @@ public class GameScreen implements Screen, InputProcessor {
     public void show() {
 
     }
+
 
     @Override
     public void render(float delta) {
@@ -170,7 +175,12 @@ public class GameScreen implements Screen, InputProcessor {
         for (Iterator<Explosion> iter = exs.iterator(); iter.hasNext(); ) {
             Explosion ex = iter.next();
             ex.time += Gdx.graphics.getDeltaTime();
-            if (ex.time > 5) {
+            if (ex.time > 3) {
+                if (map[posX(ex.rectangle)][posY(ex.rectangle)] == 2) {
+                    map[posX(ex.rectangle)][posY(ex.rectangle)] = 0;
+                }
+            }
+            if (ex.time>5){
                 iter.remove();
             }
         }
@@ -198,7 +208,6 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
     }
-
     @Override
     public void resize(int width, int height) {
 

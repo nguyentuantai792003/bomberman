@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static com.game.GameScreen.camera;
+
 public class event {
     static int gridSize = 40;
 
@@ -22,6 +24,8 @@ public class event {
     public static void moveRight(Rectangle player, int map[][]) {
         if (player.x != 760 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize + 1] == 0) {
             player.x += gridSize;
+            camera.translate(40,0);
+
 //            System.out.println("RIGHT");
         }
     }
@@ -29,6 +33,8 @@ public class event {
     public static void moveLeft(Rectangle player, int map[][]) {
         if (player.x != 0 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize - 1] == 0) {
             player.x -= gridSize;
+            camera.translate(-40,0);
+
 //            System.out.println("LEFT");
         }
     }
@@ -37,6 +43,7 @@ public class event {
         if (player.y != 760 && map[19 - (int) player.y / gridSize - 1][(int) player.x / gridSize] == 0) {
             player.y += gridSize;
 //            System.out.println("UP");
+            camera.translate(0,40);
         }
     }
 
@@ -44,6 +51,7 @@ public class event {
         if (player.y != 0 && map[19 - (int) player.y / gridSize + 1][(int) player.x / gridSize] == 0) {
             player.y -= gridSize;
 //            System.out.println("DOWN");
+            camera.translate(0,-40);
         }
     }
 
@@ -57,29 +65,29 @@ public class event {
         exs.add(new Explosion(new Rectangle(player.x, player.y + gridSize, gridSize, gridSize)));
         exs.add(new Explosion(new Rectangle(player.x, player.y - gridSize, gridSize, gridSize)));
 
-        Timer timer = new Timer(3000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                // Code to be executed
-                if (map[posX(bom)][posY(bom)] == 2) {
-                    map[posX(bom)][posY(bom)] = 0;
-                }
-                if (map[posX(bom) - 1][posY(bom)] == 2) {
-                    map[posX(bom) - 1][posY(bom)] = 0;
-                }
-                if (map[posX(bom) + 1][posY(bom)] == 2) {
-                    map[posX(bom) + 1][posY(bom)] = 0;
-                }
-                if (map[posX(bom)][posY(bom) - 1] == 2) {
-                    map[posX(bom)][posY(bom) - 1] = 0;
-                }
-                if (map[posX(bom)][posY(bom) + 1] == 2) {
-                    map[posX(bom)][posY(bom) + 1] = 0;
-                }
-            }
-        });
-        timer.setRepeats(false); // Only execute once
-        timer.start(); // Go go go!
+//        Timer timer = new Timer(3000, new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent arg0) {
+//                // Code to be executed
+//                if (map[posX(bom)][posY(bom)] == 2) {
+//                    map[posX(bom)][posY(bom)] = 0;
+//                }
+//                if (map[posX(bom) - 1][posY(bom)] == 2) {
+//                    map[posX(bom) - 1][posY(bom)] = 0;
+//                }
+//                if (map[posX(bom) + 1][posY(bom)] == 2) {
+//                    map[posX(bom) + 1][posY(bom)] = 0;
+//                }
+//                if (map[posX(bom)][posY(bom) - 1] == 2) {
+//                    map[posX(bom)][posY(bom) - 1] = 0;
+//                }
+//                if (map[posX(bom)][posY(bom) + 1] == 2) {
+//                    map[posX(bom)][posY(bom) + 1] = 0;
+//                }
+//            }
+//        });
+//        timer.setRepeats(false); // Only execute once
+//        timer.start(); // Go go go!
     }
 
 
