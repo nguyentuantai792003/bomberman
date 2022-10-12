@@ -8,12 +8,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static com.game.GameScreen.camera;
+import static com.game.GameScreen.*;
 
 public class event {
     static int gridSize = 40;
 
-    static int posX(Rectangle a) {
+    static int  posX(Rectangle a) {
         return 19 - (int) a.y / gridSize;
     }
 
@@ -24,18 +24,20 @@ public class event {
     public static void moveRight(Rectangle player, int map[][]) {
         if (player.x != 760 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize + 1] == 0) {
             player.x += gridSize;
-            camera.translate(40,0);
+//            camera.translate(40,0);
 
 //            System.out.println("RIGHT");
+            playerPosY++;
         }
     }
 
     public static void moveLeft(Rectangle player, int map[][]) {
         if (player.x != 0 && map[19 - (int) player.y / gridSize][(int) player.x / gridSize - 1] == 0) {
             player.x -= gridSize;
-            camera.translate(-40,0);
+//            camera.translate(-40,0);
 
 //            System.out.println("LEFT");
+            playerPosY--;
         }
     }
 
@@ -43,7 +45,8 @@ public class event {
         if (player.y != 760 && map[19 - (int) player.y / gridSize - 1][(int) player.x / gridSize] == 0) {
             player.y += gridSize;
 //            System.out.println("UP");
-            camera.translate(0,40);
+//            camera.translate(0,40);
+            playerPosX--;
         }
     }
 
@@ -51,7 +54,8 @@ public class event {
         if (player.y != 0 && map[19 - (int) player.y / gridSize + 1][(int) player.x / gridSize] == 0) {
             player.y -= gridSize;
 //            System.out.println("DOWN");
-            camera.translate(0,-40);
+//            camera.translate(0,-40);
+            playerPosX++;
         }
     }
 

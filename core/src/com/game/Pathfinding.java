@@ -49,7 +49,7 @@ public class Pathfinding {
             count++;
             PathNode currentNode = getLowestNode(openList);
 
-            System.out.println(count + " : " + currentNode);
+//            System.out.println(count + " : " + currentNode);
 
             if (currentNode == endNode) {
                 return CalculatePath(endNode);
@@ -67,7 +67,7 @@ public class Pathfinding {
 
                 int tentativeCost = currentNode.gCost + CalculateHcost(currentNode, neighbourNode);
 
-                System.out.println(neighbourNode + " : " + tentativeCost + ", " + neighbourNode.gCost);
+//                System.out.println(neighbourNode + " : " + tentativeCost + ", " + neighbourNode.gCost);
 
                 if (tentativeCost < neighbourNode.gCost) {
                     neighbourNode.cameFromNode = currentNode;

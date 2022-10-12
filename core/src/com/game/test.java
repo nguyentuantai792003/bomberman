@@ -11,6 +11,9 @@ public class test {
 //        for(PathNode p : pathfinding.grid){
 //            System.out.println(p);
 //        }
-        System.out.println("path: " + path);
+
+        for (PathNode p:path){
+            System.out.println(p.x + "," +p.y);
+        }
     }
 }
