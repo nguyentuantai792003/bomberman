@@ -45,7 +45,7 @@ public class GameScreen implements Screen, InputProcessor {
     public int count = 0;
 
 
-    int[][] map = {
+    static int[][] map = {
             {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
             {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
@@ -206,6 +206,8 @@ public class GameScreen implements Screen, InputProcessor {
                 iter.remove();
             }
         }
+
+
 
     }
     @Override
